@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 87b4537fdf6597e9d44d226c234dc38340bd708b1b81366e9d8285acee38aa81
+-- hash: f8f9a2dce47d16979a819b8e8905fcb535e6acd194e565ebbe01e1c0d790b604
 
 name:           project-euler
 version:        0.1.0.0
@@ -34,6 +34,8 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , primes
+    , split
   default-language: Haskell2010
 
 executable project-euler-exe
@@ -45,7 +47,9 @@ executable project-euler-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , primes
     , project-euler
+    , split
   default-language: Haskell2010
 
 test-suite project-euler-test
@@ -58,5 +62,7 @@ test-suite project-euler-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , primes
     , project-euler
+    , split
   default-language: Haskell2010
