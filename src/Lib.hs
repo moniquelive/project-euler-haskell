@@ -3,67 +3,72 @@ module Lib
   ( pCurrent
   ) where
 
-import Data.List
-import Data.Char(digitToInt)
-import Data.Numbers.Primes
-import Data.Text (Text)
+import           Data.List
+import           Data.Char(digitToInt)
+import           Data.Numbers.Primes
+import           Data.Text (Text)
 import qualified Data.Text as T
-import qualified Data.Text.Read as R
 
 memoizedFib :: Int -> Int
 memoizedFib = (map fib [0 ..] !!)
-   where fib 0 = 0
-         fib 1 = 1
-         fib n = memoizedFib (n-2) + memoizedFib (n-1)
+ where
+  fib 0 = 0
+  fib 1 = 1
+  fib n = memoizedFib (n - 2) + memoizedFib (n - 1)
 
 isPal :: (Show a) => a -> Bool
 isPal n = (even . length) s && s == reverse s
   where s = show n
 
 combinations :: Int -> [a] -> [[a]]
-combinations k ns = filter ((k==).length) (subsequences ns)
+combinations k ns = filter ((k ==) . length) (subsequences ns)
 
 p1 :: Int
-p1 = sum $ filter (\x -> x `mod` 3 == 0 || x `mod` 5 == 0) [1..1000-1]
+p1 = sum $ filter (\x -> x `mod` 3 == 0 || x `mod` 5 == 0) [1 .. 1000 - 1]
 
 p2 :: Int
-p2 = sum $ filter even $ takeWhile (< 4000000) (map memoizedFib [1..])
+p2 = sum $ filter even $ takeWhile (< 4000000) (map memoizedFib [1 ..])
 
 p3 :: Int
 p3 = maximum $ primeFactors 600851475143
 
 p6 :: Int
 p6 = sq_of_sum - sum_of_sq
-  where sq_of_sum = sum [1..100] ^ 2
-        sum_of_sq = sum $ map (^2) [1..100]
+ where
+  sq_of_sum = sum [1 .. 100] ^ 2
+  sum_of_sq = sum $ map (^ 2) [1 .. 100]
 
 p5 :: Int
-p5 = foldl lcm 1 [1..20]
+p5 = foldl lcm 1 [1 .. 20]
 
 p4 :: Int
-p4 = maximum $ filter isPal [ i * j | i <- [100..999], j <- [i..999] ]
+p4 = maximum $ filter isPal [ i * j | i <- [100 .. 999], j <- [i .. 999] ]
 
 p7 :: Integer
 p7 = last $ take 10001 primes
 
 p9 :: Integer
-p9 = head $ [ i*j*k | i <- [1..1000], j <- [1..1000], k <- [1..1000],
-                      i+j+k == 1000,
-                      i*i+j*j==k*k]
+p9 =
+  head
+    $ [ i * j * k
+      | i <- [1 .. 1000]
+      , j <- [1 .. 1000]
+      , k <- [1 .. 1000]
+      , i + j + k == 1000
+      , i * i + j * j == k * k
+      ]
 
 everyN :: Int -> [a] -> [[a]]
-everyN n d
-  | length d < n = []
-  | otherwise = take n d : everyN n (tail d)
+everyN n d | length d < n = []
+           | otherwise    = take n d : everyN n (tail d)
 
 -- 23514624000
 p8 :: Int
-p8 = maximum
-  $ map product
-  $ everyN 13 digits
-  where
-    digits = map digitToInt input
-    input = "73167176531330624919225119674426574742355349194934\
+p8 = maximum $ map product $ everyN 13 digits
+ where
+  digits = map digitToInt input
+  input
+    = "73167176531330624919225119674426574742355349194934\
 \96983520312774506326239578318016984801869478851843\
 \85861560789112949495459501737958331952853208805511\
 \12540698747158523863050715693290963295227443043557\
@@ -92,20 +97,20 @@ chop _ [] = []
 chop n xs = take n xs : chop n (drop n xs)
 
 prodEveryN :: Int -> [Int] -> [Int]
-prodEveryN n d
-  | length d < n = [1]
-  | otherwise = product (take n d) : prodEveryN n (tail d)
+prodEveryN n d | length d < n = [1]
+               | otherwise    = product (take n d) : prodEveryN n (tail d)
 
 -- 70600674
 p11 :: Int
 p11 = maximum [byLines, byColumns, byDiagonals]
-  where
-    byDiagonals = maximum $ map (maximum . prodEveryN 4) (diagonals matrix)
-    byColumns = maximum $ map (maximum . prodEveryN 4) (transpose matrix)
-    byLines = maximum $ map (maximum . prodEveryN 4) matrix
-    matrix = chop 20 numbers :: [[Int]]
-    numbers = map (read . T.unpack) $ T.splitOn " " input :: [Int]
-    input = "08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08 \
+ where
+  byDiagonals = maximum $ map (maximum . prodEveryN 4) (diagonals matrix)
+  byColumns   = maximum $ map (maximum . prodEveryN 4) (transpose matrix)
+  byLines     = maximum $ map (maximum . prodEveryN 4) matrix
+  matrix      = chop 20 numbers :: [[Int]]
+  numbers     = map (read . T.unpack) $ T.splitOn " " input :: [Int]
+  input
+    = "08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08 \
 \49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00 \
 \81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65 \
 \52 70 95 23 04 60 11 42 69 24 68 56 01 32 56 71 37 02 36 91 \
@@ -125,9 +130,11 @@ p11 = maximum [byLines, byColumns, byDiagonals]
 \20 69 36 41 72 30 23 88 34 62 99 69 82 67 59 85 74 04 36 16 \
 \20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54 \
 \01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48"
-    diagonals []       = []
-    diagonals ([]:xss) = xss
-    diagonals xss      = zipWith (++) (map ((:[]) . head) xss ++ repeat [])
-                                      ([]:diagonals (map tail xss))
+  diagonals []         = []
+  diagonals ([] : xss) = xss
+  diagonals xss        = zipWith (++)
+                                 (map ((: []) . head) xss ++ repeat [])
+                                 ([] : diagonals (map tail xss))
 
 pCurrent = p11
+
