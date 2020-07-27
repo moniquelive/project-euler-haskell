@@ -10,21 +10,14 @@ import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Read as R
 
-memoized_fib :: Int -> Int
-memoized_fib = (map fib [0 ..] !!)
+memoizedFib :: Int -> Int
+memoizedFib = (map fib [0 ..] !!)
    where fib 0 = 0
          fib 1 = 1
-         fib n = memoized_fib (n-2) + memoized_fib (n-1)
+         fib n = memoizedFib (n-2) + memoizedFib (n-1)
 
-prime_factors :: Int -> [Int]
-prime_factors 1 = []
-prime_factors n
-  | factors == [] = [n]
-  | otherwise = factors ++ prime_factors (n `div` (head factors))
-  where factors = take 1 $ filter (\x -> (n `mod` x) == 0) [2..n-1]
-
-is_pal :: Int -> Bool
-is_pal n = (even . length) s && s == reverse s
+isPal :: (Show a) => a -> Bool
+isPal n = (even . length) s && s == reverse s
   where s = show n
 
 combinations :: Int -> [a] -> [[a]]
@@ -34,25 +27,24 @@ p1 :: Int
 p1 = sum $ filter (\x -> x `mod` 3 == 0 || x `mod` 5 == 0) [1..1000-1]
 
 p2 :: Int
-p2 = sum $ filter even $ takeWhile (< 4000000) (map memoized_fib [1..])
+p2 = sum $ filter even $ takeWhile (< 4000000) (map memoizedFib [1..])
 
 p3 :: Int
-p3 = maximum $ prime_factors 600851475143
+p3 = maximum $ primeFactors 600851475143
 
 p6 :: Int
 p6 = sq_of_sum - sum_of_sq
-  where sq_of_sum = (sum [1..100]) ^2
-        sum_of_sq = sum $ map (^ 2) [1..100]
+  where sq_of_sum = sum [1..100] ^ 2
+        sum_of_sq = sum $ map (^2) [1..100]
 
 p5 :: Int
 p5 = foldl lcm 1 [1..20]
 
 p4 :: Int
--- p4 = fromJust $ find is_pal [ i * j | i <- [100..999], j <- [i..999] ]
-p4 = maximum $ filter is_pal [ i * j | i <- [100..999], j <- [i..999] ]
+p4 = maximum $ filter isPal [ i * j | i <- [100..999], j <- [i..999] ]
 
 p7 :: Integer
-p7 = last $ take 10001 $ primes
+p7 = last $ take 10001 primes
 
 p9 :: Integer
 p9 = head $ [ i*j*k | i <- [1..1000], j <- [1..1000], k <- [1..1000],
@@ -102,15 +94,15 @@ chop n xs = take n xs : chop n (drop n xs)
 prodEveryN :: Int -> [Int] -> [Int]
 prodEveryN n d
   | length d < n = [1]
-  | otherwise = (product $ take n d) : prodEveryN n (tail d)
+  | otherwise = product (take n d) : prodEveryN n (tail d)
 
 -- 70600674
 p11 :: Int
 p11 = maximum [byLines, byColumns, byDiagonals]
   where
-    byDiagonals = maximum $ map maximum $ map (prodEveryN 4) (diagonals matrix)
-    byColumns = maximum $ map maximum $ map (prodEveryN 4) (transpose matrix)
-    byLines = maximum $ map maximum $ map (prodEveryN 4) matrix
+    byDiagonals = maximum $ map (maximum . prodEveryN 4) (diagonals matrix)
+    byColumns = maximum $ map (maximum . prodEveryN 4) (transpose matrix)
+    byLines = maximum $ map (maximum . prodEveryN 4) matrix
     matrix = chop 20 numbers :: [[Int]]
     numbers = map (read . T.unpack) $ T.splitOn " " input :: [Int]
     input = "08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08 \
@@ -136,6 +128,6 @@ p11 = maximum [byLines, byColumns, byDiagonals]
     diagonals []       = []
     diagonals ([]:xss) = xss
     diagonals xss      = zipWith (++) (map ((:[]) . head) xss ++ repeat [])
-                                      ([]:(diagonals (map tail xss)))
+                                      ([]:diagonals (map tail xss))
 
 pCurrent = p11
