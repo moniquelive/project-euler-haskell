@@ -3,11 +3,9 @@ module Lib
   ( pCurrent
   ) where
 
-import           Data.List
-import           Data.Char(digitToInt)
-import           Data.Numbers.Primes
-import           Data.Text (Text)
-import qualified Data.Text as T
+import Data.List
+import Data.Char(digitToInt)
+import Data.Numbers.Primes
 
 memoizedFib :: Int -> Int
 memoizedFib = (map fib [0 ..] !!)
@@ -108,7 +106,7 @@ p11 = maximum [byLines, byColumns, byDiagonals]
   byColumns   = maximum $ map (maximum . prodEveryN 4) (transpose matrix)
   byLines     = maximum $ map (maximum . prodEveryN 4) matrix
   matrix      = chop 20 numbers :: [[Int]]
-  numbers     = map (read . T.unpack) $ T.splitOn " " input :: [Int]
+  numbers     = map read $ words input :: [Int]
   input
     = "08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08 \
 \49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00 \
@@ -136,5 +134,9 @@ p11 = maximum [byLines, byColumns, byDiagonals]
                                  (map ((: []) . head) xss ++ repeat [])
                                  ([] : diagonals (map tail xss))
 
-pCurrent = p11
+-- 1366
+p16 :: Int
+p16 = sum $ map digitToInt $ show (2 ^ 1000)
+
+pCurrent = p16
 
