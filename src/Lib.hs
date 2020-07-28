@@ -1,7 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Lib
   ( pCurrent
-  ) where
+  )
+where
 
 import Data.List
 import Data.Char(digitToInt)
@@ -15,46 +16,44 @@ memoizedFib = (map fib [0 ..] !!)
   fib n = memoizedFib (n - 2) + memoizedFib (n - 1)
 
 isPal :: (Show a) => a -> Bool
-isPal n = (even . length) s && s == reverse s
-  where s = show n
+isPal n = (even . length) s && s == reverse s where s = show n
 
 combinations :: Int -> [a] -> [[a]]
 combinations k ns = filter ((k ==) . length) (subsequences ns)
 
 p1 :: Int
-p1 = sum $ filter (\x -> x `mod` 3 == 0 || x `mod` 5 == 0) [1 .. 1000 - 1]
+p1 = sum . filter (\x -> x `mod` 3 == 0 || x `mod` 5 == 0) $ [1 .. 1000 - 1]
 
 p2 :: Int
-p2 = sum $ filter even $ takeWhile (< 4000000) (map memoizedFib [1 ..])
+p2 = sum . filter even . takeWhile (< 4000000) . map memoizedFib $ [1 ..]
 
 p3 :: Int
-p3 = maximum $ primeFactors 600851475143
+p3 = maximum . primeFactors $ 600851475143
 
 p6 :: Int
 p6 = sq_of_sum - sum_of_sq
  where
   sq_of_sum = sum [1 .. 100] ^ 2
-  sum_of_sq = sum $ map (^ 2) [1 .. 100]
+  sum_of_sq = sum . map (^ 2) $ [1 .. 100]
 
 p5 :: Int
 p5 = foldl lcm 1 [1 .. 20]
 
 p4 :: Int
-p4 = maximum $ filter isPal [ i * j | i <- [100 .. 999], j <- [i .. 999] ]
+p4 = maximum . filter isPal $ [ i * j | i <- [100 .. 999], j <- [i .. 999] ]
 
 p7 :: Integer
-p7 = last $ take 10001 primes
+p7 = last . take 10001 $ primes
 
 p9 :: Integer
-p9 =
-  head
-    $ [ i * j * k
-      | i <- [1 .. 1000]
-      , j <- [1 .. 1000]
-      , k <- [1 .. 1000]
-      , i + j + k == 1000
-      , i * i + j * j == k * k
-      ]
+p9 = head
+  [ i * j * k
+  | i <- [1 .. 1000]
+  , j <- [1 .. 1000]
+  , k <- [1 .. 1000]
+  , i + j + k == 1000
+  , i * i + j * j == k * k
+  ]
 
 everyN :: Int -> [a] -> [[a]]
 everyN n d | length d < n = []
@@ -62,7 +61,7 @@ everyN n d | length d < n = []
 
 -- 23514624000
 p8 :: Int
-p8 = maximum $ map product $ everyN 13 digits
+p8 = maximum . map product . everyN 13 $ digits
  where
   digits = map digitToInt input
   input
@@ -88,7 +87,7 @@ p8 = maximum $ map product $ everyN 13 digits
 \71636269561882670428252483600823257530420752963450"
 
 p10 :: Integer
-p10 = sum $ takeWhile (< 2000000) primes
+p10 = sum . takeWhile (< 2000000) $ primes
 
 chop :: Int -> [a] -> [[a]]
 chop _ [] = []
@@ -102,11 +101,11 @@ prodEveryN n d | length d < n = [1]
 p11 :: Int
 p11 = maximum [byLines, byColumns, byDiagonals]
  where
-  byDiagonals = maximum $ map (maximum . prodEveryN 4) (diagonals matrix)
-  byColumns   = maximum $ map (maximum . prodEveryN 4) (transpose matrix)
-  byLines     = maximum $ map (maximum . prodEveryN 4) matrix
+  byDiagonals = maximum . map (maximum . prodEveryN 4) $ diagonals matrix
+  byColumns   = maximum . map (maximum . prodEveryN 4) $ transpose matrix
+  byLines     = maximum . map (maximum . prodEveryN 4) $ matrix
   matrix      = chop 20 numbers :: [[Int]]
-  numbers     = map read $ words input :: [Int]
+  numbers     = map read . words $ input :: [Int]
   input
     = "08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08 \
 \49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00 \
@@ -136,11 +135,11 @@ p11 = maximum [byLines, byColumns, byDiagonals]
 
 -- 1366
 p16 :: Int
-p16 = sum $ map digitToInt $ show (2 ^ 1000)
+p16 = sum . map digitToInt . show $ (2 ^ 1000)
 
 -- 837799
 p14 :: Int
-p14 = snd $ maximum $ zip (map (collatz 0) [1 .. 1000000]) [1 .. 1000000]
+p14 = snd . maximum $ zip (map (collatz 0) [1 .. 1000000]) [1 .. 1000000]
  where
   collatz :: Int -> Int -> Int
   collatz _ 0 = error "Impossibru"
