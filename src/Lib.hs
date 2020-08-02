@@ -257,15 +257,41 @@ p13 = read . take 10 . show . sum . map (read :: String->Integer) . words $ inpu
 \53503534226472524250874054075591789781264330331690"
 
 -- 76576500 (4s!)
-p12 :: Integer
+p12 :: Int
 p12 =
-  snd . head . dropWhile ((< 500) . fst) . map (factors . triangular) $ [1 ..]
+  triangular
+    . maybe 0 (+ 1)
+    . findIndex (> 500)
+    . map (factors . triangular)
+    $ [1 ..]
  where
-  factors n = (2 * y - 1, n)
+  factors n = 2 * y - 1
    where
     y = length [ i | i <- [1 .. u], mod n i == 0 ]
     u = round . sqrt . fromIntegral $ n
   triangular x = x * (x + 1) `div` 2
 
-pCurrent = p12
+factorial :: Integer -> Integer
+factorial n = product [1 .. n]
+
+-- 648
+p20 :: Int
+p20 = sum . map digitToInt . show . factorial $ 100
+
+-- 137846528820
+p15 :: Integer
+p15 = binomial (20 + 20) 20
+  where binomial n k = factorial n `div` factorial k `div` factorial (n - k)
+
+-- 4782
+p25 :: Int
+p25 =
+  maybe 0 (+ 1) . elemIndex 1000 . map (length . show) . memoizedFib $ [1 ..]
+
+-- p25 = fst . head . dropWhile ((< 1000) . snd) . map y $ [1 ..]
+--  where
+--   y n = (n, digits . fromIntegral . memoizedFib $ n)
+--   digits n = floor (logBase 10 n) + 1
+
+pCurrent = p25
 
