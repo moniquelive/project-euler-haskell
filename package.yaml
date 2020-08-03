@@ -1,6 +1,6 @@
-name: project-euler
+name: project-euler-haskell
 version: 0.1.0.0
-github: "lccro/project-euler"
+github: "lccro/project-euler-haskell"
 license: BSD3
 author: "Cyber"
 maintainer: "lccro@msn.com"
@@ -17,29 +17,31 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description: Please see the README on GitHub at <https://github.com/lccro/project-euler#readme>
+description: Please see the README on GitHub at <https://github.com/lccro/project-euler-haskell#readme>
 
 dependencies:
   - base >= 4.7 && < 5
   - primes
   - text
+  - hspec
 
 library:
   source-dirs: src
 
 executables:
-  project-euler-exe:
+  project-euler-haskell-exe:
     main: Main.hs
     source-dirs: app
     ghc-options:
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
+      - -Wall
     dependencies:
-      - project-euler
+      - project-euler-haskell
 
 tests:
-  project-euler-test:
+  project-euler-haskell-test:
     main: Spec.hs
     source-dirs: test
     ghc-options:
@@ -47,4 +49,4 @@ tests:
       - -rtsopts
       - -with-rtsopts=-N
     dependencies:
-      - project-euler
+      - project-euler-haskell

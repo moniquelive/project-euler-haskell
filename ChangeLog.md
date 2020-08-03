@@ -1,3 +1,3 @@
-# Changelog for project-euler
+# Changelog for project-euler-haskell
 
 ## Unreleased changes

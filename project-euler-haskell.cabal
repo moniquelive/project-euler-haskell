@@ -4,13 +4,13 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 566a5202cc4b4194f23e8f2adb4c42b88ac7f5f1265cbbc7d2c6c3444b293042
+-- hash: a8c3437addd34e9f1fd8955612243aaa29586f1dfc8ac40c7763075bf87cea09
 
-name:           project-euler
+name:           project-euler-haskell
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/lccro/project-euler#readme>
-homepage:       https://github.com/lccro/project-euler#readme
-bug-reports:    https://github.com/lccro/project-euler/issues
+description:    Please see the README on GitHub at <https://github.com/lccro/project-euler-haskell#readme>
+homepage:       https://github.com/lccro/project-euler-haskell#readme
+bug-reports:    https://github.com/lccro/project-euler-haskell/issues
 author:         Cyber
 maintainer:     lccro@msn.com
 copyright:      Copyleft 2020
@@ -23,46 +23,50 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/lccro/project-euler
+  location: https://github.com/lccro/project-euler-haskell
 
 library
   exposed-modules:
       Lib
   other-modules:
-      Paths_project_euler
+      Paths_project_euler_haskell
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
+    , hspec
     , primes
     , text
   default-language: Haskell2010
 
-executable project-euler-exe
+executable project-euler-haskell-exe
   main-is: Main.hs
   other-modules:
-      Paths_project_euler
+      Paths_project_euler_haskell
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall
   build-depends:
       base >=4.7 && <5
+    , hspec
     , primes
-    , project-euler
+    , project-euler-haskell
     , text
   default-language: Haskell2010
 
-test-suite project-euler-test
+test-suite project-euler-haskell-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Paths_project_euler
+      LibSpec
+      Paths_project_euler_haskell
   hs-source-dirs:
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , hspec
     , primes
-    , project-euler
+    , project-euler-haskell
     , text
   default-language: Haskell2010

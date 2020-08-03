@@ -1,13 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Lib
-  ( pCurrent
-  )
-where
+{-# LANGUAGE TypeApplications #-}
+module Lib where
 
-import Data.Function
+-- import Data.Function
 import Data.List
 import Data.Char(digitToInt)
 import Data.Numbers.Primes
+import Data.Maybe
 
 memoizedFib :: Int -> Int
 memoizedFib = (map fib [0 ..] !!)
@@ -31,11 +30,13 @@ p2 = sum . filter even . takeWhile (< 4000000) . map memoizedFib $ [1 ..]
 p3 :: Int
 p3 = maximum . primeFactors $ 600851475143
 
+-- 25164150
 p6 :: Int
-p6 = sq_of_sum - sum_of_sq
+p6 = sq_of_sum - sum_of_squares
  where
-  sq_of_sum = sum [1 .. 100] ^ 2
-  sum_of_sq = sum . map (^ 2) $ [1 .. 100]
+  sq_of_sum      = sum [1 .. 100] ^ (2 :: Integer)
+  sum_of_squares = sum (map (^ (2 :: Integer)) [1 .. 100])
+
 
 p5 :: Int
 p5 = foldl lcm 1 [1 .. 20]
@@ -137,7 +138,7 @@ p11 = maximum [byLines, byColumns, byDiagonals]
 
 -- 1366
 p16 :: Int
-p16 = sum . map digitToInt . show $ (2 ^ 1000)
+p16 = sum . map digitToInt . show $ (2 :: Integer) ^ (1000 :: Integer)
 
 -- 837799
 p14 :: Int
@@ -149,8 +150,8 @@ p14 = snd . maximum $ zip (map (collatz 0) [1 .. 1000000]) [1 .. 1000000]
   collatz l n = collatz (l + 1) (nxt n)
    where
     nxt :: Int -> Int
-    nxt n | even n    = div n 2
-          | otherwise = 3 * n + 1
+    nxt i | even i    = div i 2
+          | otherwise = 3 * i + 1
 
 -- 5537376230
 p13 :: Integer
@@ -265,10 +266,12 @@ p12 =
     . map (factors . triangular)
     $ [1 ..]
  where
-  factors n = 2 * y - 1
+  factors :: Int -> Int
+  factors n = 2 * fromIntegral y - 1
    where
     y = length [ i | i <- [1 .. u], mod n i == 0 ]
-    u = round . sqrt . fromIntegral $ n
+    u :: Int
+    u = round . sqrt @Double . fromIntegral $ n
   triangular x = x * (x + 1) `div` 2
 
 factorial :: Integer -> Integer
@@ -285,13 +288,10 @@ p15 = binomial (20 + 20) 20
 
 -- 4782
 p25 :: Int
-p25 =
-  maybe 0 (+ 1) . elemIndex 1000 . map (length . show) . memoizedFib $ [1 ..]
+p25 = fromMaybe 0 . findIndex (> (10 :: Integer) ^ (999 :: Integer)) $ fibs
+  where fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
 
--- p25 = fst . head . dropWhile ((< 1000) . snd) . map y $ [1 ..]
---  where
---   y n = (n, digits . fromIntegral . memoizedFib $ n)
---   digits n = floor (logBase 10 n) + 1
-
-pCurrent = p25
+--
+pCurrent :: Int
+pCurrent = 0
 
