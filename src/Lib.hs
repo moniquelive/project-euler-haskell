@@ -336,6 +336,11 @@ p17 = length . concatMap decompose $ [1 .. 1000]
     | otherwise = error "Impossibru"
     where firstDigit = digitToInt . head . show
 
+-- 31626
+p21 :: Int
+p21 = sum $ [ x | x <- [2 .. 10000], let b = d x in b /= x && d b == x ]
+  where
+    d n = sum $ [ x | x <- [1 .. (n - 1)], n `rem` x == 0 ]
 
 --
 pCurrent :: Int
