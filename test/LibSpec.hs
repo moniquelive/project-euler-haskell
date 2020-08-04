@@ -56,7 +56,7 @@ spec = do
             p14 `shouldBe` 837799
 
         it "validates p13" $ do
-            p13 `shouldBe` 5537376230
+            p13 `shouldReturn` 5537376230
 
         it "validates p12" $ do
             p12 `shouldBe` 76576500
