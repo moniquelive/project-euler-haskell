@@ -43,8 +43,8 @@ spec = do
         it "validates p10" $ do
             p10 `shouldBe` 142913828922
 
--- -- 23514624000
--- p8 :: IO Int
+        it "validates p8" $ do
+            p8 `shouldReturn` 23514624000
 
         it "validates p11" $ do
             p11 `shouldBe` 70600674
