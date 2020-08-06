@@ -17,8 +17,8 @@ memoizedFib = (map fib [0 ..] !!)
 isPal :: (Show a) => a -> Bool
 isPal n = (even . length) s && s == reverse s where s = show n
 
-combinations :: Int -> [a] -> [[a]]
-combinations k ns = filter ((k ==) . length) (subsequences ns)
+-- combinations :: Int -> [a] -> [[a]]
+-- combinations k ns = filter ((k ==) . length) (subsequences ns)
 
 p1 :: Int
 p1 = sum . filter (\x -> x `mod` 3 == 0 || x `mod` 5 == 0) $ [1 .. 1000 - 1]
@@ -206,6 +206,20 @@ p21 :: Int
 p21 = sum $ [ x | x <- [2 .. 10000], let b = d x in b /= x && d b == x ]
   where
     d n = sum $ [ x | x <- [1 .. (n - 1)], n `rem` x == 0 ]
+
+-- data Tree a = Empty | Node a (Tree a) (Tree a) deriving (Show)
+-- 1074
+p18 :: IO Int
+p18 = do
+  ls <- readFile "p18.txt"
+  return $ go ls
+ where
+  go ls = head . count $ tri ls
+  tri = map (map (read @Int) . words) . lines
+  count []         = []
+  count [xs      ] = xs
+  count (xs : xss) = zipWith (+) xs (zipWith max (init cs) (tail cs))
+    where cs = count xss
 
 --
 pCurrent :: Int

@@ -7,6 +7,9 @@ import Test.Hspec
 spec :: Spec
 spec = do
     describe "all" $ do
+        it "validates p18" $ do
+            p18 `shouldReturn` 1074
+
         it "validates p21" $ do
             p21 `shouldBe` 31626
 
