@@ -1,6 +1,8 @@
 module Main where
 
-import Lib
+import Lib(pCurrent)
 
 main :: IO ()
-main = putStrLn $ show pCurrent
+main = do
+  r <- pCurrent
+  putStrLn . show $ r

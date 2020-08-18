@@ -24,6 +24,8 @@ dependencies:
   - primes
   - text
   - hspec
+  - time
+  - split
 
 library:
   source-dirs: src

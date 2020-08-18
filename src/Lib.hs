@@ -3,9 +3,11 @@
 module Lib where
 
 import Data.List
-import Data.Char(digitToInt)
+import Data.List.Split
+import Data.Char(digitToInt,ord)
 import Data.Numbers.Primes
 import Data.Maybe
+import qualified Data.Time as D
 
 memoizedFib :: Int -> Int
 memoizedFib = (map fib [0 ..] !!)
@@ -21,7 +23,8 @@ isPal n = (even . length) s && s == reverse s where s = show n
 -- combinations k ns = filter ((k ==) . length) (subsequences ns)
 
 p1 :: Int
-p1 = sum . filter (\x -> x `mod` 3 == 0 || x `mod` 5 == 0) $ [1 .. 1000 - 1]
+p1 = sum . filter f $ [1 .. 1000 - 1]
+  where f x = elem 0 [x `mod` 3, x `mod` 5]
 
 p2 :: Int
 p2 = sum . filter even . takeWhile (< 4000000) . map memoizedFib $ [1 ..]
@@ -29,13 +32,11 @@ p2 = sum . filter even . takeWhile (< 4000000) . map memoizedFib $ [1 ..]
 p3 :: Int
 p3 = maximum . primeFactors $ 600851475143
 
--- 25164150
 p6 :: Int
 p6 = sq_of_sum - sum_of_squares
  where
   sq_of_sum      = sum [1 .. 100] ^ (2 :: Integer)
   sum_of_squares = sum (map (^ (2 :: Integer)) [1 .. 100])
-
 
 p5 :: Int
 p5 = foldl lcm 1 [1 .. 20]
@@ -71,9 +72,9 @@ p8 = do
 p10 :: Integer
 p10 = sum . takeWhile (< 2000000) $ primes
 
-chop :: Int -> [a] -> [[a]]
-chop _ [] = []
-chop n xs = take n xs : chop n (drop n xs)
+-- chop :: Int -> [a] -> [[a]]
+-- chop _ [] = []
+-- chop n xs = take n xs : chop n (drop n xs)
 
 prodEveryN :: Int -> [Int] -> [Int]
 prodEveryN n d | length d < n = [1]
@@ -86,7 +87,7 @@ p11 = do
   return $ go ls
  where
   go ls =
-    let matrix      = chop 20 . map read . words $ ls
+    let matrix      = chunksOf 20 . map read . words $ ls
         byDiagonals = maximum . map (maximum . prodEveryN 4) $ diagonals matrix
         byColumns   = maximum . map (maximum . prodEveryN 4) $ transpose matrix
         byLines     = maximum . map (maximum . prodEveryN 4) $ matrix
@@ -160,37 +161,8 @@ p25 = fromMaybe 0 . findIndex (> (10 :: Integer) ^ (999 :: Integer)) $ fibs
 p17 :: Int
 p17 = length . concatMap decompose $ [1 .. 1000]
  where
-  one =
-    [ "one"
-    , "two"
-    , "three"
-    , "four"
-    , "five"
-    , "six"
-    , "seven"
-    , "eight"
-    , "nine"
-    , "ten"
-    , "eleven"
-    , "twelve"
-    , "thirteen"
-    , "fourteen"
-    , "fifteen"
-    , "sixteen"
-    , "seventeen"
-    , "eighteen"
-    , "nineteen"
-    ]
-  ty =
-    [ "twenty"
-    , "thirty"
-    , "forty"
-    , "fifty"
-    , "sixty"
-    , "seventy"
-    , "eighty"
-    , "ninety"
-    ]
+  one = ["one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"]
+  ty = ["twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"]
   decompose x
     | x == 0 = []
     | x < 20 = one !! (x - 1)
@@ -221,7 +193,27 @@ p18 = do
   count (xs : xss) = zipWith (+) xs (zipWith max (init cs) (tail cs))
     where cs = count xss
 
---
-pCurrent :: Int
-pCurrent = 0
+-- 171
+p19 :: Int
+p19 = length . filter f $ [start .. end]
+ where
+  start = D.fromGregorian 1901 1 1
+  end   = D.fromGregorian 2000 12 31
+  f d = (D.dayOfWeek d == D.Sunday) && (dayOfMonth . D.toGregorian $ d) == 1
+  dayOfMonth (_, _, dd) = dd
+
+-- 871198282
+p22 :: IO Int
+p22 = do
+  ls <- readFile "names.txt"
+  return $ go ls
+ where
+  go ls = sum . map f $ zip [1 ..] (sorted ls)
+  f (n, w) = n * score w
+  score  = sum . map (subtract 64 . ord)
+  sorted = sort . splitOn "," . filter (/= '"')
+
+
+pCurrent :: IO Int
+pCurrent = p22
 

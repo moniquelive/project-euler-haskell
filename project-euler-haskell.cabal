@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a8c3437addd34e9f1fd8955612243aaa29586f1dfc8ac40c7763075bf87cea09
+-- hash: 72d7de9639f2cfac05783ce89e7bec655213d3cc4a845dc7938579451e3b2e67
 
 name:           project-euler-haskell
 version:        0.1.0.0
@@ -36,7 +36,9 @@ library
       base >=4.7 && <5
     , hspec
     , primes
+    , split
     , text
+    , time
   default-language: Haskell2010
 
 executable project-euler-haskell-exe
@@ -51,7 +53,9 @@ executable project-euler-haskell-exe
     , hspec
     , primes
     , project-euler-haskell
+    , split
     , text
+    , time
   default-language: Haskell2010
 
 test-suite project-euler-haskell-test
@@ -68,5 +72,7 @@ test-suite project-euler-haskell-test
     , hspec
     , primes
     , project-euler-haskell
+    , split
     , text
+    , time
   default-language: Haskell2010
