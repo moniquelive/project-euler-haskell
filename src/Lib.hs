@@ -24,7 +24,7 @@ isPal n = (even . length) s && s == reverse s where s = show n
 
 p1 :: Int
 p1 = sum . filter f $ [1 .. 1000 - 1]
-  where f x = elem 0 [x `mod` 3, x `mod` 5]
+  where f x = 0 `elem` [x `mod` 3, x `mod` 5]
 
 p2 :: Int
 p2 = sum . filter even . takeWhile (< 4000000) . map memoizedFib $ [1 ..]
@@ -213,7 +213,30 @@ p22 = do
   score  = sum . map (subtract 64 . ord)
   sorted = sort . splitOn "," . filter (/= '"')
 
+-- 2783915460
+p24 :: String
+p24 = permutations "0123456789" !! (1000000 - 1)
+ where
+  permutations :: [a] -> [[a]]
+  permutations [] = [[]]
+  permutations xs = [ y : zs | (y, ys) <- select xs, zs <- permutations ys ]
+   where
+    select []       = []
+    select (x : xs) = (x, xs) : [ (y, x : ys) | (y, ys) <- select xs ]
+
+-- 9110846700A
+p48 :: String
+p48 = reverse . take 10 . reverse . show . sum $ map (\x -> x ^ x) [1..1000]
+
+-- 443839
+p30 :: Int
+p30 = sum $ filter f [10 .. 999999]
+ where
+  digits :: Int -> [Int]
+  digits n = map (subtract 48 . ord) $ show n
+
+  f :: Int -> Bool
+  f n = n == (sum . map (^ 5) $ digits n)
 
 pCurrent :: IO Int
 pCurrent = p22
-
