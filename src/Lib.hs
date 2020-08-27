@@ -2,12 +2,14 @@
 {-# LANGUAGE TypeApplications #-}
 module Lib where
 
-import Data.List
-import Data.List.Split
-import Data.Char(digitToInt,ord)
-import Data.Numbers.Primes
-import Data.Maybe
-import qualified Data.Time as D
+import           Data.List
+import           Data.List.Split
+import           Data.Char                      ( digitToInt
+                                                , ord
+                                                )
+import           Data.Numbers.Primes
+import           Data.Maybe
+import qualified Data.Time                     as D
 
 memoizedFib :: Int -> Int
 memoizedFib = (map fib [0 ..] !!)
@@ -66,8 +68,7 @@ p8 :: IO Int
 p8 = do
   ls <- readFile "p8.txt"
   return $ go ls
- where
-  go = maximum . map product . everyN 13 . map digitToInt . head . lines
+  where go = maximum . map product . everyN 13 . map digitToInt . head . lines
 
 p10 :: Integer
 p10 = sum . takeWhile (< 2000000) $ primes
@@ -120,8 +121,7 @@ p13 :: IO Integer
 p13 = do
   ls <- readFile "p13.txt"
   return $ go ls
- where
-  go = read . take 10 . show . sum . map (read @Integer) . words
+  where go = read . take 10 . show . sum . map (read @Integer) . words
 
 -- 76576500 (4s!)
 p12 :: Int
@@ -161,14 +161,47 @@ p25 = fromMaybe 0 . findIndex (> (10 :: Integer) ^ (999 :: Integer)) $ fibs
 p17 :: Int
 p17 = length . concatMap decompose $ [1 .. 1000]
  where
-  one = ["one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"]
-  ty = ["twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"]
+  one =
+    [ "one"
+    , "two"
+    , "three"
+    , "four"
+    , "five"
+    , "six"
+    , "seven"
+    , "eight"
+    , "nine"
+    , "ten"
+    , "eleven"
+    , "twelve"
+    , "thirteen"
+    , "fourteen"
+    , "fifteen"
+    , "sixteen"
+    , "seventeen"
+    , "eighteen"
+    , "nineteen"
+    ]
+  ty =
+    [ "twenty"
+    , "thirty"
+    , "forty"
+    , "fifty"
+    , "sixty"
+    , "seventy"
+    , "eighty"
+    , "ninety"
+    ]
   decompose x
     | x == 0 = []
     | x < 20 = one !! (x - 1)
-    | x >= 20 && x < 100 = ty !! (firstDigit x - 2) ++ decompose (x `mod` 10 :: Int)
+    | x >= 20 && x < 100 = ty !! (firstDigit x - 2) ++ decompose
+      (x `mod` 10 :: Int)
     | x < 1000 && x `mod` 100 == 0 = one !! (firstDigit x - 1) ++ "hundred"
-    | x > 100 && x <= 999 =  one !! (firstDigit x - 1) ++ "hundredand" ++ decompose (x `mod` 100 :: Int)
+    | x > 100 && x <= 999 =  one
+    !! (firstDigit x - 1)
+    ++ "hundredand"
+    ++ decompose (x `mod` 100 :: Int)
     | x == 1000 = "onethousand"
     | otherwise = error "Impossibru"
     where firstDigit = digitToInt . head . show
@@ -176,8 +209,7 @@ p17 = length . concatMap decompose $ [1 .. 1000]
 -- 31626
 p21 :: Int
 p21 = sum $ [ x | x <- [2 .. 10000], let b = d x in b /= x && d b == x ]
-  where
-    d n = sum $ [ x | x <- [1 .. (n - 1)], n `rem` x == 0 ]
+  where d n = sum $ [ x | x <- [1 .. (n - 1)], n `rem` x == 0 ]
 
 -- data Tree a = Empty | Node a (Tree a) (Tree a) deriving (Show)
 -- 1074
@@ -226,16 +258,13 @@ p24 = permutations "0123456789" !! (1000000 - 1)
 
 -- 9110846700A
 p48 :: String
-p48 = reverse . take 10 . reverse . show . sum $ map (\x -> x ^ x) [1..1000]
+p48 = reverse . take 10 . reverse . show . sum $ map (\x -> x ^ x) [1 .. 1000]
 
 -- 443839
 p30 :: Int
 p30 = sum $ filter f [10 .. 999999]
  where
-  digits :: Int -> [Int]
   digits n = map (subtract 48 . ord) $ show n
-
-  f :: Int -> Bool
   f n = n == (sum . map (^ 5) $ digits n)
 
 pCurrent :: IO Int
