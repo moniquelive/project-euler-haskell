@@ -247,25 +247,37 @@ p22 = do
 
 -- 2783915460
 p24 :: String
-p24 = permutations "0123456789" !! (1000000 - 1)
+p24 = permu "0123456789" !! (1000000 - 1)
  where
-  permutations :: [a] -> [[a]]
-  permutations [] = [[]]
-  permutations xs = [ y : zs | (y, ys) <- select xs, zs <- permutations ys ]
+  permu :: [a] -> [[a]]
+  permu [] = [[]]
+  permu xxs = [ y : zs | (y, ys) <- select xxs, zs <- permu ys ]
    where
     select []       = []
     select (x : xs) = (x, xs) : [ (y, x : ys) | (y, ys) <- select xs ]
 
 -- 9110846700A
 p48 :: String
-p48 = reverse . take 10 . reverse . show . sum $ map (\x -> x ^ x) [1 .. 1000]
+p48 = reverse . take 10 . reverse . show @Integer . sum $ map (\x -> x ^ x) [1 .. 1000]
 
 -- 443839
 p30 :: Int
 p30 = sum $ filter f [10 .. 999999]
  where
   digits n = map (subtract 48 . ord) $ show n
-  f n = n == (sum . map (^ 5) $ digits n)
+  f n = n == (sum . map (^ (5 :: Int)) $ digits n)
+
+-- 669171001
+p28 :: Int
+p28 = (+ 1) . sum $ map diags [1 .. n 1001]
+ where
+  n x = (x - 1) `div` 2
+  diags x =
+    (4 * x * x + 4 * x + 1)
+      + (4 * x * x + 1)
+      + (4 * x * x - 2 * x + 1)
+      + (4 * x * x + 2 * x + 1)
 
 pCurrent :: IO Int
 pCurrent = p22
+
