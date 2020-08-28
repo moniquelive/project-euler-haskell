@@ -278,6 +278,14 @@ p28 = (+ 1) . sum $ map diags [1 .. n 1001]
       + (4 * x * x - 2 * x + 1)
       + (4 * x * x + 2 * x + 1)
 
+-- 9183
+p29 :: Int
+p29 =
+  length
+    . nub
+    . sort
+    $ [ a ^ b | a <- [(2 :: Integer) .. 100], b <- [(2 :: Integer) .. 100] ]
+
 pCurrent :: IO Int
 pCurrent = p22
 
