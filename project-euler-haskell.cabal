@@ -3,8 +3,6 @@ cabal-version: 1.12
 -- This file has been generated from package.yaml by hpack version 0.34.2.
 --
 -- see: https://github.com/sol/hpack
---
--- hash: 72d7de9639f2cfac05783ce89e7bec655213d3cc4a845dc7938579451e3b2e67
 
 name:           project-euler-haskell
 version:        0.1.0.0
@@ -34,6 +32,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , containers
     , hspec
     , primes
     , split
@@ -50,6 +49,7 @@ executable project-euler-haskell-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall
   build-depends:
       base >=4.7 && <5
+    , containers
     , hspec
     , primes
     , project-euler-haskell
@@ -66,9 +66,10 @@ test-suite project-euler-haskell-test
       Paths_project_euler_haskell
   hs-source-dirs:
       test
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -O2
   build-depends:
       base >=4.7 && <5
+    , containers
     , hspec
     , primes
     , project-euler-haskell

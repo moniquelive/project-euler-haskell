@@ -26,6 +26,7 @@ dependencies:
   - hspec
   - time
   - split
+  - containers
 
 library:
   source-dirs: src
@@ -50,5 +51,6 @@ tests:
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
+      - -O2
     dependencies:
       - project-euler-haskell

@@ -10,6 +10,7 @@ import           Data.Char                      ( digitToInt
 import           Data.Numbers.Primes
 import           Data.Maybe
 import qualified Data.Time                     as D
+import qualified Data.Set                      as S
 
 memoizedFib :: Int -> Int
 memoizedFib = (map fib [0 ..] !!)
@@ -250,7 +251,7 @@ p24 :: String
 p24 = permu "0123456789" !! (1000000 - 1)
  where
   permu :: [a] -> [[a]]
-  permu [] = [[]]
+  permu []  = [[]]
   permu xxs = [ y : zs | (y, ys) <- select xxs, zs <- permu ys ]
    where
     select []       = []
@@ -258,7 +259,8 @@ p24 = permu "0123456789" !! (1000000 - 1)
 
 -- 9110846700A
 p48 :: String
-p48 = reverse . take 10 . reverse . show @Integer . sum $ map (\x -> x ^ x) [1 .. 1000]
+p48 = reverse . take 10 . reverse . show @Integer . sum $ map (\x -> x ^ x)
+                                                              [1 .. 1000]
 
 -- 443839
 p30 :: Int
@@ -285,6 +287,25 @@ p29 =
     . nub
     . sort
     $ [ a ^ b | a <- [(2 :: Integer) .. 100], b <- [(2 :: Integer) .. 100] ]
+
+isqrt :: Int -> Int
+isqrt n = floor (sqrt @Double $ fromIntegral n)
+
+-- 4179871
+p23 :: Int
+p23 = sum . filter (not . (`S.member` sums)) $ [1 .. 28123 - 1 :: Int]
+ where
+  sums = S.fromList
+    [ (abundants !! i) + (abundants !! j)
+    | i <- [0 .. length abundants - 1]
+    , j <- [0 .. i] ]
+  abundants = filter divisors [12 .. 28123 - 1 :: Int]
+  divisors n
+    | n < 4 = False
+    | otherwise = (> n) . (+ 1) . sum $ [ s + t | i <- [2 .. isqrt n]
+        , let (q, r) = n `quotRem` i
+        , let s      = if r == 0 then i else 0
+        , let t      = if r == 0 && q /= i then q else 0 ]
 
 pCurrent :: IO Int
 pCurrent = p22
