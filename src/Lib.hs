@@ -10,7 +10,7 @@ import           Data.Char                      ( digitToInt
 import           Data.Numbers.Primes
 import           Data.Maybe
 import qualified Data.Time                     as D
-import qualified Data.Set                      as S
+import qualified Data.IntSet                   as S
 
 memoizedFib :: Int -> Int
 memoizedFib = (map fib [0 ..] !!)
@@ -293,12 +293,9 @@ isqrt n = floor (sqrt @Double $ fromIntegral n)
 
 -- 4179871
 p23 :: Int
-p23 = sum . filter (not . (`S.member` sums)) $ [1 .. 28123 - 1 :: Int]
+p23 = sum . S.elems $ S.difference (S.fromList [1 .. 28123 - 1 :: Int]) sums
  where
-  sums = S.fromList
-    [ (abundants !! i) + (abundants !! j)
-    | i <- [0 .. length abundants - 1]
-    , j <- [0 .. i] ]
+  sums = S.unions . map S.fromList . zipWith (map . (+)) abundants $ tails abundants
   abundants = filter divisors [12 .. 28123 - 1 :: Int]
   divisors n
     | n < 4 = False
