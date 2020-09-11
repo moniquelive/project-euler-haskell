@@ -66,10 +66,7 @@ everyN n d | length d < n = []
 
 -- 23514624000
 p8 :: IO Int
-p8 = do
-  ls <- readFile "p8.txt"
-  return $ go ls
-  where go = maximum . map product . everyN 13 . map digitToInt . head . lines
+p8 = maximum . map product . everyN 13 . map digitToInt . head . lines <$> readFile "p8.txt"
 
 p10 :: Integer
 p10 = sum . takeWhile (< 2000000) $ primes
@@ -84,21 +81,18 @@ prodEveryN n d | length d < n = [1]
 
 -- 70600674
 p11 :: IO Int
-p11 = do
-  ls <- readFile "p11.txt"
-  return $ go ls
+p11 = go . chunksOf 20 . map read . words <$> readFile "p11.txt"
  where
-  go ls =
-    let matrix      = chunksOf 20 . map read . words $ ls
-        byDiagonals = maximum . map (maximum . prodEveryN 4) $ diagonals matrix
-        byColumns   = maximum . map (maximum . prodEveryN 4) $ transpose matrix
-        byLines     = maximum . map (maximum . prodEveryN 4) $ matrix
-    in  maximum [byLines, byColumns, byDiagonals]
-  diagonals []         = []
-  diagonals ([] : xss) = xss
-  diagonals xss        = zipWith (++)
-                                 (map ((: []) . head) xss ++ repeat [])
-                                 ([] : diagonals (map tail xss))
+  go matrix = maximum [byLines, byColumns, byDiagonals]
+    where
+      byDiagonals = maximum . map (maximum . prodEveryN 4) $ diagonals matrix
+      byColumns   = maximum . map (maximum . prodEveryN 4) $ transpose matrix
+      byLines     = maximum . map (maximum . prodEveryN 4) $ matrix
+      diagonals []         = []
+      diagonals ([] : xss) = xss
+      diagonals xss        = zipWith (++)
+                                    (map ((: []) . head) xss ++ repeat [])
+                                    ([] : diagonals (map tail xss))
 
 -- 1366
 p16 :: Int
@@ -119,10 +113,7 @@ p14 = snd . maximum $ zip (map (collatz 0) [1 .. 1000000]) [1 .. 1000000]
 
 -- 5537376230
 p13 :: IO Integer
-p13 = do
-  ls <- readFile "p13.txt"
-  return $ go ls
-  where go = read . take 10 . show . sum . map (read @Integer) . words
+p13 = read . take 10 . show . sum . map (read @Integer) . words <$> readFile "p13.txt"
 
 -- 76576500 (4s!)
 p12 :: Int
@@ -215,12 +206,8 @@ p21 = sum $ [ x | x <- [2 .. 10000], let b = d x in b /= x && d b == x ]
 -- data Tree a = Empty | Node a (Tree a) (Tree a) deriving (Show)
 -- 1074
 p18 :: IO Int
-p18 = do
-  ls <- readFile "p18.txt"
-  return $ go ls
+p18 = head . count . map (map (read @Int) . words) . lines <$> readFile "p18.txt"
  where
-  go ls = head . count $ tri ls
-  tri = map (map (read @Int) . words) . lines
   count []         = []
   count [xs      ] = xs
   count (xs : xss) = zipWith (+) xs (zipWith max (init cs) (tail cs))
@@ -237,14 +224,15 @@ p19 = length . filter f $ [start .. end]
 
 -- 871198282
 p22 :: IO Int
-p22 = do
-  ls <- readFile "names.txt"
-  return $ go ls
+p22 =
+  sum
+    .   zipWith f [1 ..]
+    .   sort
+    .   splitOn ","
+    .   filter (/= '"')
+    <$> readFile "names.txt"
  where
-  go ls = sum . map f $ zip [1 ..] (sorted ls)
-  f (n, w) = n * score w
-  score  = sum . map (subtract 64 . ord)
-  sorted = sort . splitOn "," . filter (/= '"')
+  f n w = n * (sum . map (subtract 64 . ord) $ w)
 
 -- 2783915460
 p24 :: String
