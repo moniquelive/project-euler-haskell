@@ -2,15 +2,18 @@
 {-# LANGUAGE TypeApplications #-}
 module Lib where
 
+import           Control.Monad                  ( liftM2 )
 import           Data.List
 import           Data.List.Split
 import           Data.Char                      ( digitToInt
+                                                , intToDigit
                                                 , ord
                                                 )
 import           Data.Numbers.Primes
 import           Data.Maybe
 import qualified Data.Time                     as D
 import qualified Data.IntSet                   as S
+import           Numeric
 
 memoizedFib :: Int -> Int
 memoizedFib = (map fib [0 ..] !!)
@@ -309,6 +312,13 @@ p34 = sum . filter (\n -> n == digitsFact n) $ [3 .. 100000]
  where
   digitsFact = sum . map (fact . digitToInt) . show
   fact n = product [2 .. n]
+
+-- 872187
+p36 :: Int
+p36 = sum . filter (liftM2 (&&) pal2 pal10) $ [1 .. 1000000]
+ where
+  pal10 n = let s = show n in s == reverse s
+  pal2 n = let s = showIntAtBase 2 intToDigit n "" in s == reverse s
 
 pCurrent :: IO Int
 pCurrent = p22
