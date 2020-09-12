@@ -292,6 +292,17 @@ p23 = sum . S.elems $ S.difference (S.fromList [1 .. 28123 - 1 :: Int]) sums
         , let s      = if r == 0 then i else 0
         , let t      = if r == 0 && q /= i then q else 0 ]
 
+-- 7273
+p67 :: IO Int
+p67 = head . count . map (map (read @Int) . words) . lines <$>
+  readFile "p067_triangle.txt"
+ where
+  count []         = []
+  count [xs      ] = xs
+  count (xs : xss) = zipWith (+) xs (zipWith max (init cs) (tail cs))
+    where cs = count xss
+
+
 pCurrent :: IO Int
 pCurrent = p22
 
