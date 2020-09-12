@@ -303,6 +303,13 @@ p67 = head . count . map (map (read @Int) . words) . lines <$>
     where cs = count xss
 
 
+-- 40730
+p34 :: Int
+p34 = sum . filter (\n -> n == digitsFact n) $ [3 .. 100000]
+ where
+  digitsFact = sum . map (fact . digitToInt) . show
+  fact n = product [2 .. n]
+
 pCurrent :: IO Int
 pCurrent = p22
 
