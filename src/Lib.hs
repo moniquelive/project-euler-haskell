@@ -74,10 +74,6 @@ p8 = maximum . map product . everyN 13 . map digitToInt . head . lines <$> readF
 p10 :: Integer
 p10 = sum . takeWhile (< 2000000) $ primes
 
--- chop :: Int -> [a] -> [[a]]
--- chop _ [] = []
--- chop n xs = take n xs : chop n (drop n xs)
-
 prodEveryN :: Int -> [Int] -> [Int]
 prodEveryN n d | length d < n = [1]
                | otherwise    = product (take n d) : prodEveryN n (tail d)
@@ -319,6 +315,19 @@ p36 = sum . filter (liftM2 (&&) pal2 pal10) $ [1 .. 1000000]
  where
   pal10 n = let s = show n in s == reverse s
   pal2 n = let s = showIntAtBase 2 intToDigit n "" in s == reverse s
+
+-- -59231
+p27 :: Int
+p27 =
+  snd
+    . maximum
+    $ [ (len, a * b)
+      | a <- [-999 .. 999]
+      , b <- [-1000 .. 1000]
+      , let f n = n * n + a * n + b
+      , let len = length . takeWhile isPrime . map f $ [0 .. 100000]
+      , len > 1
+      ]
 
 pCurrent :: IO Int
 pCurrent = p22
