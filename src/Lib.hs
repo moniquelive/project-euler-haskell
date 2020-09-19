@@ -310,8 +310,11 @@ p34 = sum . filter (\n -> n == digitsFact n) $ [3 .. 100000]
   fact n = product [2 .. n]
 
 -- 872187
+andP :: (a -> Bool) -> (a -> Bool) -> a -> Bool
+andP = liftM2 (&&)
+
 p36 :: Int
-p36 = sum . filter (liftM2 (&&) pal2 pal10) $ [1 .. 1000000]
+p36 = sum . filter (andP pal2 pal10) $ [1 .. 1000000]
  where
   pal10 n = let s = show n in s == reverse s
   pal2 n = let s = showIntAtBase 2 intToDigit n "" in s == reverse s
@@ -328,6 +331,47 @@ p27 =
       , let len = length . takeWhile isPrime . map f $ [0 .. 100000]
       , len > 1
       ]
+
+-- 73682
+p31 :: Int
+p31 = length
+  [ 1 :: Int
+  | a <- [0 .. 200 `div` 1 :: Int]
+  , b <- [0 .. 200 `div` 2 :: Int]
+  , c <- [0 .. 200 `div` 5 :: Int]
+  , d <- [0 .. 200 `div` 10 :: Int]
+  , e <- [0 .. 200 `div` 20 :: Int]
+  , f <- [0 .. 200 `div` 50 :: Int]
+  , g <- [0 .. 200 `div` 100 :: Int]
+  , h <- [0 .. 200 `div` 200 :: Int]
+  , 1 * a + 2 * b + 5 * c + 10 * d + 20 * e + 50 * f + 100 * g + 200 * h == 200
+  ]
+
+-- 73682
+p35 :: Int
+p35 = length . filter (circular . show) $ [1 .. 1000000 :: Int]
+ where
+  circular = all (isPrime . read @Int) . circle
+  circle xs =
+    let trim ys = zipWith const ys xs
+    in  trim . map trim . iterate tail . cycle $ xs
+
+-- 983
+p26 :: Int
+p26 =
+  snd
+    . maximum
+    $ [ (cycleLength co10 tenModCo10 tenModCo10 1, n)
+      | n <- [3 .. 1000]
+      , let co10       = coPrime10 n
+      , let tenModCo10 = 10 `rem` co10
+      , co10 /= 1
+      ]
+ where
+  coPrime10 = product . filter (andP (/= 2) (/= 5)) . primeFactors
+  cycleLength :: Int -> Int -> Int -> Int -> Int
+  cycleLength n mv cm k | cm == 1   = k
+                        | otherwise = cycleLength n mv (cm * mv `rem` n) (k + 1)
 
 pCurrent :: IO Int
 pCurrent = p22
