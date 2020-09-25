@@ -373,6 +373,14 @@ p26 =
   cycleLength n mv cm k | cm == 1   = k
                         | otherwise = cycleLength n mv (cm * mv `rem` n) (k + 1)
 
+-- 210
+p40 :: Int
+p40 =
+  product
+    . map (digitToInt . (digits !!))
+    $ [0, 10 - 1, 100 - 1, 1000 - 1, 10000 - 1, 100000 - 1, 1000000 - 1]
+  where digits = concatMap (show @Int) [1 ..]
+
 pCurrent :: IO Int
 pCurrent = p22
 
