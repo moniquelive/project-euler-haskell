@@ -381,6 +381,18 @@ p40 =
     $ [0, 10 - 1, 100 - 1, 1000 - 1, 10000 - 1, 100000 - 1, 1000000 - 1]
   where digits = concatMap (show @Int) [1 ..]
 
+-- 162
+p41 :: IO Int
+p41 =
+  length
+    .   filter (isTri . sum . map (subtract 64 . ord))
+    .   splitOn ","
+    .   filter (/= '"')
+    <$> readFile "p42.txt"
+ where
+  triangular x = x * (x + 1) `div` 2
+  isTri n = (== n) . head . dropWhile (< n) . map triangular $ [1 ..]
+
 pCurrent :: IO Int
-pCurrent = p22
+pCurrent = undefined
 
