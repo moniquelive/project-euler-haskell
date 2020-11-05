@@ -385,13 +385,13 @@ p40 =
 p41 :: IO Int
 p41 =
   length
-    .   filter (isTri . sum . map (subtract 64 . ord))
-    .   splitOn ","
-    .   filter (/= '"')
+    . filter (isTri . sum . map (subtract 64 . ord))
+    . splitOn ","
+    . filter (/= '"')
     <$> readFile "p42.txt"
- where
-  triangular x = x * (x + 1) `div` 2
-  isTri n = (== n) . head . dropWhile (< n) . map triangular $ [1 ..]
+  where
+    triangular x = x * (x + 1) `div` 2
+    isTri n = (== n) . head . dropWhile (< n) . map triangular $ [1 ..]
 
 pCurrent :: IO Int
 pCurrent = undefined
