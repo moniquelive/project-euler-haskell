@@ -236,13 +236,13 @@ p22 =
 -- 2783915460
 p24 :: String
 p24 = permu "0123456789" !! (1000000 - 1)
- where
-  permu :: [a] -> [[a]]
-  permu []  = [[]]
-  permu xxs = [ y : zs | (y, ys) <- select xxs, zs <- permu ys ]
-   where
-    select []       = []
-    select (x : xs) = (x, xs) : [ (y, x : ys) | (y, ys) <- select xs ]
+  where
+    permu :: [a] -> [[a]]
+    permu [] = [[]]
+    permu xxs = [y : zs | (y, ys) <- select xxs, zs <- permu ys]
+      where
+        select [] = []
+        select (x : xs) = (x, xs) : [(y, x : ys) | (y, ys) <- select xs]
 
 -- 9110846700A
 p48 :: String
@@ -400,6 +400,15 @@ p52 = head . dropWhile (not . digits) $ [1 ..]
   digits n = all (== head lst) (tail lst)
     where lst = map (sort . show) [n * 2, n * 3, n * 4, n * 5, n * 6]
 
+-- 932718654
+p38 :: Int
+p38 =
+  let x num n str
+        | length str >= 9 = str
+        | otherwise = x num (n + 1) (str ++ show (num * n))
+   in maximum [read s | num <- [1 .. 10000] :: [Int], let s = x num 1 "", sort s == "123456789"]
+
 pCurrent :: IO Int
-pCurrent = undefined
+pCurrent = return p38
+
 
