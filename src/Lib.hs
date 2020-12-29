@@ -2,25 +2,31 @@
 {-# LANGUAGE TypeApplications #-}
 module Lib where
 
-import           Control.Monad                  ( liftM2 )
-import           Data.List
-import           Data.List.Split
-import           Data.Char                      ( digitToInt
-                                                , intToDigit
-                                                , ord
-                                                )
-import           Data.Numbers.Primes
-import           Data.Maybe
-import qualified Data.Time                     as D
-import qualified Data.IntSet                   as S
-import           Numeric
+import Control.Monad (liftM2)
+import Data.Char
+  ( digitToInt,
+    intToDigit,
+    ord,
+  )
+import qualified Data.IntSet as S
+import Data.List
+import Data.List.Split
+import Data.Numbers.Primes
+import qualified Data.Time as D
+import Numeric
 
-memoizedFib :: Int -> Int
-memoizedFib = (map fib [0 ..] !!)
- where
-  fib 0 = 0
-  fib 1 = 1
-  fib n = memoizedFib (n - 2) + memoizedFib (n - 1)
+-- memoizedFib :: Int -> Int
+-- memoizedFib = (map fib [0 ..] !!)
+--  where
+--   fib 0 = 0
+--   fib 1 = 1
+--   fib n = memoizedFib (n - 2) + memoizedFib (n - 1)
+
+fibs :: Num a => [a]
+fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+
+fib :: (Num a) => Int -> a
+fib n = fibs !! n
 
 isPal :: (Show a) => a -> Bool
 isPal n = (even . length) s && s == reverse s where s = show n
@@ -32,8 +38,8 @@ p1 :: Int
 p1 = sum . filter f $ [1 .. 1000 - 1]
   where f x = 0 `elem` [x `mod` 3, x `mod` 5]
 
-p2 :: Int
-p2 = sum . filter even . takeWhile (< 4000000) . map memoizedFib $ [1 ..]
+p2 :: Integer
+p2 = sum . filter even . takeWhile (< 4000000) . map fib $ [1 ..]
 
 p3 :: Int
 p3 = maximum . primeFactors $ 600851475143
@@ -145,8 +151,9 @@ p15 = binomial (20 + 20) 20
 
 -- 4782
 p25 :: Int
-p25 = fromMaybe 0 . findIndex (> (10 :: Integer) ^ (999 :: Integer)) $ fibs
-  where fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+p25 =
+  let bign = (10 :: Integer) ^ (999 :: Integer)
+   in fst . head . dropWhile (\(_, f) -> f < bign) $ zip [0 ..] fibs
 
 -- 21124
 p17 :: Int
@@ -349,12 +356,11 @@ p31 = length
 
 -- 73682
 p35 :: Int
-p35 = length . filter (circular . show) $ [1 .. 1000000 :: Int]
- where
-  circular = all (isPrime . read @Int) . circle
-  circle xs =
-    let trim ys = zipWith const ys xs
-    in  trim . map trim . iterate tail . cycle $ xs
+p35 =
+  let circular = all (isPrime . read @Int) . circle
+      rotate = drop <> take
+      circle xs = map (`rotate` xs) [1 .. length xs]
+   in length . filter (circular . show) $ filter isPrime [1 .. 1000000 :: Int]
 
 -- 983
 p26 :: Int
