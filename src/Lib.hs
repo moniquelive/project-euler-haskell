@@ -2,12 +2,12 @@
 {-# LANGUAGE TypeApplications #-}
 module Lib where
 
+import Data.Array
 import Data.Char
   ( digitToInt,
     intToDigit,
     ord,
   )
-import qualified Data.IntSet as S
 import Data.List
 import Data.List.Split
 import Data.Numbers.Primes
@@ -286,16 +286,14 @@ isqrt n = floor (sqrt @Double $ fromIntegral n)
 
 -- 4179871
 p23 :: Int
-p23 = sum . S.elems $ S.difference (S.fromList [1 .. 28123 - 1 :: Int]) sums
- where
-  sums = S.unions . map S.fromList . zipWith (map . (+)) abundants $ tails abundants
-  abundants = filter divisors [12 .. 28123 - 1 :: Int]
-  divisors n
-    | n < 4 = False
-    | otherwise = (> n) . (+ 1) . sum $ [ s + t | i <- [2 .. isqrt n]
-        , let (q, r) = n `quotRem` i
-        , let s      = if r == 0 then i else 0
-        , let t      = if r == 0 && q /= i then q else 0 ]
+p23 =
+  let combinations xs ys = [x ++ y | x <- xs, y <- tails ys]
+      divisors = map product . foldl combinations [[]] . (group . primeFactors)
+      properDivisors = tail . divisors
+      abundant y = y /= 0 && (sum (properDivisors y) > y)
+      abundant' = listArray (0, 28123) $ map abundant [0 .. 28123 :: Int]
+      sumOf2 f n = or [f ! x && f ! (n - x) | x <- [0 .. n `div ` 2]]
+   in sum . filter (not . sumOf2 abundant') $ [1 .. 28123 :: Int]
 
 -- 7273
 p67 :: IO Int
