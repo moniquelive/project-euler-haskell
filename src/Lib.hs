@@ -2,7 +2,6 @@
 {-# LANGUAGE TypeApplications #-}
 module Lib where
 
-import Control.Monad (liftM2)
 import Data.Char
   ( digitToInt,
     intToDigit,
@@ -317,14 +316,11 @@ p34 = sum . filter (\n -> n == digitsFact n) $ [3 .. 100000]
   fact n = product [2 .. n]
 
 -- 872187
-andP :: (a -> Bool) -> (a -> Bool) -> a -> Bool
-andP = liftM2 (&&)
-
 p36 :: Int
-p36 = sum . filter (andP pal2 pal10) $ [1 .. 1000000]
- where
-  pal10 n = let s = show n in s == reverse s
-  pal2 n = let s = showIntAtBase 2 intToDigit n "" in s == reverse s
+p36 =
+  let pal10 n = show n == reverse (show n)
+      pal2 n = let bin = showIntAtBase 2 intToDigit n "" in bin == reverse bin
+   in sum . filter pal2 . filter pal10 $ [1 .. 1000000]
 
 -- -59231
 p27 :: Int
@@ -365,16 +361,17 @@ p26 =
   snd
     . maximum
     $ [ (cycleLength co10 tenModCo10 tenModCo10 1, n)
-      | n <- [3 .. 1000]
-      , let co10       = coPrime10 n
-      , let tenModCo10 = 10 `rem` co10
-      , co10 /= 1
+        | n <- [3 .. 1000],
+          let co10 = coPrime10 n,
+          let tenModCo10 = 10 `rem` co10,
+          co10 /= 1
       ]
- where
-  coPrime10 = product . filter (andP (/= 2) (/= 5)) . primeFactors
-  cycleLength :: Int -> Int -> Int -> Int -> Int
-  cycleLength n mv cm k | cm == 1   = k
-                        | otherwise = cycleLength n mv (cm * mv `rem` n) (k + 1)
+  where
+    coPrime10 = product . filter (and . sequence [(/= 2), (/= 5)]) . primeFactors
+    cycleLength :: Int -> Int -> Int -> Int -> Int
+    cycleLength n mv cm k
+      | cm == 1 = k
+      | otherwise = cycleLength n mv (cm * mv `rem` n) (k + 1)
 
 -- 210
 p40 :: Int
@@ -412,6 +409,6 @@ p38 =
    in maximum [read s | num <- [1 .. 10000] :: [Int], let s = x num 1 "", sort s == "123456789"]
 
 pCurrent :: IO Int
-pCurrent = return p31
+pCurrent = return 0
 
 
