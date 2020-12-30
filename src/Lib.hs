@@ -341,18 +341,15 @@ p27 =
 
 -- 73682
 p31 :: Int
-p31 = length
-  [ 1 :: Int
-  | a <- [0 .. 200 `div` 1 :: Int]
-  , b <- [0 .. 200 `div` 2 :: Int]
-  , c <- [0 .. 200 `div` 5 :: Int]
-  , d <- [0 .. 200 `div` 10 :: Int]
-  , e <- [0 .. 200 `div` 20 :: Int]
-  , f <- [0 .. 200 `div` 50 :: Int]
-  , g <- [0 .. 200 `div` 100 :: Int]
-  , h <- [0 .. 200 `div` 200 :: Int]
-  , 1 * a + 2 * b + 5 * c + 10 * d + 20 * e + 50 * f + 100 * g + 200 * h == 200
-  ]
+p31 =
+  let change :: Int -> [Int] -> Int
+      change cents coins = change' coins !! cents
+        where
+          change' = foldr addCoin (1 : repeat 0)
+          addCoin c oldlist = newlist
+            where
+              newlist = take c oldlist ++ zipWith (+) newlist (drop c oldlist)
+   in change 200 [200, 100, 50, 20, 10, 5, 2, 1]
 
 -- 73682
 p35 :: Int
@@ -415,6 +412,6 @@ p38 =
    in maximum [read s | num <- [1 .. 10000] :: [Int], let s = x num 1 "", sort s == "123456789"]
 
 pCurrent :: IO Int
-pCurrent = return p38
+pCurrent = return p31
 
 
