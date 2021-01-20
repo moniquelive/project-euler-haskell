@@ -406,6 +406,15 @@ p38 =
         | otherwise = x num (n + 1) (str ++ show (num * n))
    in maximum [read s | num <- [1 .. 10000] :: [Int], let s = x num 1 "", sort s == "123456789"]
 
+-- p50 :: Int
+p50 :: Int
+p50 =
+  let smallPrimes = takeWhile (< 50000) primes
+      consecutivePrimesFrom p = [(i, q) | (i, q) <- zip [0 ..] (cumsums smallPrimes), isPrime q]
+        where
+          cumsums = takeWhile (< 1000000) . scanl1 (+) . dropWhile (< p)
+   in snd . maximum $ [iq | p <- smallPrimes, iq <- consecutivePrimesFrom p]
+
 pCurrent :: IO Int
 pCurrent = return 0
 
