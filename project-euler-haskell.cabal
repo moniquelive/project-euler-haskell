@@ -1,19 +1,17 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.35.1.
 --
 -- see: https://github.com/sol/hpack
---
--- hash: 5993b79f34ce1af93d064c5bcee5b04d1f786ee8fe96666c6df4993aa3fe5446
 
 name:           project-euler-haskell
 version:        0.1.0.0
 description:    Please see the README on GitHub at <https://github.com/lccro/project-euler-haskell#readme>
-homepage:       https://github.com/lccro/project-euler-haskell#readme
-bug-reports:    https://github.com/lccro/project-euler-haskell/issues
-author:         Cyber
-maintainer:     lccro@msn.com
-copyright:      Copyleft 2020
+homepage:       https://github.com/moniquelive/project-euler-haskell#readme
+bug-reports:    https://github.com/moniquelive/project-euler-haskell/issues
+author:         MoniqueLive
+maintainer:     moniquelive@moniquelive.com
+copyright:      Copyleft 2023
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -23,18 +21,80 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/lccro/project-euler-haskell
+  location: https://github.com/moniquelive/project-euler-haskell
 
 library
   exposed-modules:
-      Lib
+      Common
+      Problems.P1
+      Problems.P10
+      Problems.P11
+      Problems.P12
+      Problems.P13
+      Problems.P14
+      Problems.P15
+      Problems.P16
+      Problems.P17
+      Problems.P18
+      Problems.P19
+      Problems.P2
+      Problems.P20
+      Problems.P21
+      Problems.P22
+      Problems.P23
+      Problems.P24
+      Problems.P25
+      Problems.P26
+      Problems.P27
+      Problems.P28
+      Problems.P29
+      Problems.P3
+      Problems.P30
+      Problems.P31
+      Problems.P32
+      Problems.P33
+      Problems.P34
+      Problems.P35
+      Problems.P36
+      Problems.P37
+      Problems.P38
+      Problems.P39
+      Problems.P4
+      Problems.P40
+      Problems.P41
+      Problems.P42
+      Problems.P43
+      Problems.P44
+      Problems.P45
+      Problems.P46
+      Problems.P47
+      Problems.P48
+      Problems.P49
+      Problems.P5
+      Problems.P50
+      Problems.P51
+      Problems.P52
+      Problems.P53
+      Problems.P54
+      Problems.P55
+      Problems.P56
+      Problems.P57
+      Problems.P58
+      Problems.P59
+      Problems.P6
+      Problems.P60
+      Problems.P67
+      Problems.P7
+      Problems.P8
+      Problems.P9
   other-modules:
       Paths_project_euler_haskell
   hs-source-dirs:
       src
+  ghc-options: -j -Wall -O2 -optc-O3 -optc-ffast-math -funfolding-use-threshold=16 -threaded -rtsopts
   build-depends:
       array
-    , base >=4.7 && <5
+    , base ==4.*
     , containers
     , hspec
     , primes
@@ -49,10 +109,10 @@ executable project-euler-haskell-exe
       Paths_project_euler_haskell
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall
+  ghc-options: -j -Wall -O2 -optc-O3 -optc-ffast-math -funfolding-use-threshold=16 -threaded -rtsopts
   build-depends:
       array
-    , base >=4.7 && <5
+    , base ==4.*
     , containers
     , hspec
     , primes
@@ -66,19 +126,20 @@ test-suite project-euler-haskell-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      LibSpec
+      ProblemsSpec
       Paths_project_euler_haskell
   hs-source-dirs:
       test
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -O2
+  ghc-options: -j -Wall -O2 -optc-O3 -optc-ffast-math -funfolding-use-threshold=16 -threaded -rtsopts
   build-depends:
       array
-    , base >=4.7 && <5
+    , base ==4.*
     , containers
-    , hspec
+    , hspec ==2.*
     , primes
     , project-euler-haskell
     , split
     , text
     , time
   default-language: Haskell2010
+  build-tool-depends: hspec-discover:hspec-discover == 2.*

@@ -1,10 +1,10 @@
 name: project-euler-haskell
 version: 0.1.0.0
-github: "lccro/project-euler-haskell"
+github: "moniquelive/project-euler-haskell"
 license: BSD3
-author: "Cyber"
-maintainer: "lccro@msn.com"
-copyright: "Copyleft 2020"
+author: "MoniqueLive"
+maintainer: "moniquelive@moniquelive.com"
+copyright: "Copyleft 2023"
 
 extra-source-files:
   - README.md
@@ -20,7 +20,7 @@ extra-source-files:
 description: Please see the README on GitHub at <https://github.com/lccro/project-euler-haskell#readme>
 
 dependencies:
-  - base >= 4.7 && < 5
+  - base == 4.*
   - primes
   - text
   - hspec
@@ -29,6 +29,8 @@ dependencies:
   - containers
   - array
 
+ghc-options: -j -Wall -O2 -optc-O3 -optc-ffast-math -funfolding-use-threshold=16 -threaded -rtsopts
+
 library:
   source-dirs: src
 
@@ -36,22 +38,9 @@ executables:
   project-euler-haskell-exe:
     main: Main.hs
     source-dirs: app
-    ghc-options:
-      - -threaded
-      - -rtsopts
-      - -with-rtsopts=-N
-      - -Wall
-    dependencies:
-      - project-euler-haskell
+    dependencies: project-euler-haskell
 
 tests:
   project-euler-haskell-test:
-    main: Spec.hs
-    source-dirs: test
-    ghc-options:
-      - -threaded
-      - -rtsopts
-      - -with-rtsopts=-N
-      - -O2
-    dependencies:
-      - project-euler-haskell
+    defaults: hspec/hspec@main
+    dependencies: project-euler-haskell
