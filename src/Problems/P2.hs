@@ -1,6 +1,6 @@
 module Problems.P2 where
 
-import Common (fib)
+import Common (fibs)
 
 p2 :: Integer
-p2 = sum . filter even . takeWhile (< 4000000) . map fib $ [1 ..]
+p2 = sum . filter even . takeWhile (< 4000000) $ fibs
